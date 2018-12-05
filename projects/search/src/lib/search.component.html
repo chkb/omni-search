@@ -1,0 +1,95 @@
+<mat-form-field class="full-width">
+  <mat-chip-list #chips
+                 autofilled="true">
+    <ng-container *ngFor="let option of config">
+      <mat-chip [removable]="true"
+                *ngIf="option.selected"
+                color="primary"
+                (click)="isOpen = true">
+        {{ option.displayText + ' : ' }}
+        <span *ngIf="option.multiSelect">
+          <span *ngFor="let value of option.selectedValue">
+            {{value}}
+          </span>
+        </span>
+
+        <!--
+          -- TODO
+          - Date
+          - Date range
+          - Boolean
+          - Freetext
+          - Select
+          - 
+          -->
+        <!-- <mat-form-field *ngIf="option.type === 'daterange'">
+          <input matInput
+                 [matDatepicker]="picker"
+                 placeholder="Choose a date">
+          <mat-datepicker-toggle matSuffix
+                                 [for]="picker">
+          </mat-datepicker-toggle>
+          <mat-datepicker touchUi
+                          #picker>
+          </mat-datepicker>
+        </mat-form-field> -->
+
+        <mat-form-field *ngIf="option.type === 'autocomplete'"
+                        class="example-full-width">
+          <input type="text"
+                 placeholder="Pick one"
+                 aria-label="Number"
+                 matInput
+                 [matAutocomplete]="subOption">
+          <mat-autocomplete autoActiveFirstOption
+                            isOpen="isOpen"
+                            #subOption="matAutocomplete">
+            <mat-option *ngFor="let subOption of option.values | async"
+                        [value]="subOption"
+                        (click)="setSubOption(option, subOption)">
+              {{subOption}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <!-- <span *ngFor="let item of option.values index as i">
+          {{ item }} {{ (option.values.length) > 1 && (option.values.length != (i+1)) ? ' & ' : '' }}
+        </span> -->
+        <mat-icon (click)="remove(option)"
+                  matChipRemove>
+          cancel
+        </mat-icon>
+      </mat-chip>
+    </ng-container>
+    <input type="text"
+           placeholder="Search"
+           aria-label="Number"
+           matInput
+           [formControl]="myControl"
+           [matChipInputFor]="chips"
+           [matAutocomplete]="auto">
+    <button mat-button
+            matPrefix
+            mat-icon-button
+            aria-label="Search">
+      <mat-icon>search</mat-icon>
+    </button>
+    <mat-autocomplete autoActiveFirstOption
+                      #auto="matAutocomplete">
+      <mat-option *ngFor="let option of availableOptions"
+                  [value]="option"
+                  (click)="selectOption(option)">
+        {{option.displayText}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-chip-list>
+
+</mat-form-field>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<pre>
+  {{config | json}}
+</pre>
